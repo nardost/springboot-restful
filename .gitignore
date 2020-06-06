@@ -1,5 +1,9 @@
 # Maven
 target/
+HELP.md
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
 
 # Eclipse
 .settings/
@@ -36,6 +40,14 @@ local.properties
 .settings
 .springBeans
 .sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
 
 # Configuration / Credentials
 .config/

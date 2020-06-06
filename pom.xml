@@ -11,6 +11,7 @@
     <modules>
         <module>caching</module>
         <module>hateoas</module>
+        <module>reactive</module>
     </modules>
 
     <parent>
