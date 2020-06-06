@@ -36,7 +36,9 @@ public class HateoasQuoteController {
         List<HttpEntity<Quote>> entities = new ArrayList<>();
         List<Quote> quotes = quoteService.findAll();
         quotes.forEach(q -> {
-            q.add(linkTo(methodOn(HateoasQuoteController.class).getQuoteById(q.getId())).withRel("details"));
+            q.add(linkTo(methodOn(HateoasQuoteController.class)
+                            .getQuoteById(q.getId()))
+                            .withRel("quote-details"));
             entities.add(new ResponseEntity<>(q, HttpStatus.OK));
         });
         return entities;
@@ -45,8 +47,12 @@ public class HateoasQuoteController {
     @GetMapping("/hateoas-quote/{id}")
     public ResponseEntity<Quote> getQuoteById(@PathVariable(required = true) String id) {
         Quote quote = quoteService.findById(id);
-        quote.add(linkTo(methodOn(HateoasQuoteController.class).getQuoteById(id)).withSelfRel())
-                .add(linkTo(methodOn(HateoasSageController.class).getSageByName(quote.getBy())).withRel("sayer"));
+        quote.add(linkTo(methodOn(HateoasQuoteController.class)
+                        .getQuoteById(id))
+                        .withSelfRel())
+                .add(linkTo(methodOn(HateoasSageController.class)
+                        .getSageByName(quote.getBy()))
+                        .withRel("sayer-details"));
         return new ResponseEntity<>(quote, HttpStatus.OK);
     }
 }
