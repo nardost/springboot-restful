@@ -1,0 +1,11 @@
+server:
+  port: 8082
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      host: 192.168.2.116
+      port: 27017
+      database: se457
+      username: nardos
+      password: se452-g6
