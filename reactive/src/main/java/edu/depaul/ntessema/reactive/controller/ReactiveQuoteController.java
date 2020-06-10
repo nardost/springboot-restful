@@ -1,37 +1,42 @@
 package edu.depaul.ntessema.reactive.controller;
 
 import edu.depaul.ntessema.reactive.model.Quote;
-import edu.depaul.ntessema.reactive.repository.ReactiveQuoteRepository;
+import edu.depaul.ntessema.reactive.service.ReactiveQuoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.function.Consumer;
 
 @RestController
 @Slf4j
 public class ReactiveQuoteController {
 
-    private final ReactiveQuoteRepository reactiveQuoteRepository;
+    private final ReactiveQuoteService reactiveQuoteService;
 
     @Autowired
-    public ReactiveQuoteController(ReactiveQuoteRepository repository) {
-        this.reactiveQuoteRepository = repository;
+    public ReactiveQuoteController(ReactiveQuoteService service) {
+        this.reactiveQuoteService = service;
     }
 
     @GetMapping(value = "/quote-flux", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Flux<Quote> getQuotes() {
-        Consumer<Quote> consumer = quote -> log.info(quote.getQuote());
-        return reactiveQuoteRepository.findAll()
+
+        return reactiveQuoteService.getAllQuotes()
                 .doFirst(() -> log.info("Done first"))
+                .filter(q -> q.getQuote().length() < 50)
                 .delayElements(Duration.ofSeconds(1))
-                .doOnEach(e -> consumer.accept(e.get()))
-                .limitRequest(10)
                 .doOnComplete(() -> log.info("Completed"))
                 .doOnCancel(() -> log.info("Cancelled"));
+    }
+
+    @GetMapping(value = "/quote-mono/{id}", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    public Mono<Quote> getQuote(@PathVariable String id) {
+        return reactiveQuoteService.getQuoteById(id).defaultIfEmpty(new Quote()).log().metrics();
     }
 }
