@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * @author nardos
+ *
+ * Internal service APIs
+ */
 @Service
 public class ReactiveQuoteService {
 

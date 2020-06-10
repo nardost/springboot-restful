@@ -29,14 +29,14 @@ public class ReactiveQuoteController {
 
         return reactiveQuoteService.getAllQuotes()
                 .doFirst(() -> log.info("Done first"))
-                .filter(q -> q.getQuote().length() < 50)
-                .delayElements(Duration.ofSeconds(1))
+                //.filter(q -> q.getQuote().length() < 50)
+                .delayElements(Duration.ofMillis(500))
                 .doOnComplete(() -> log.info("Completed"))
                 .doOnCancel(() -> log.info("Cancelled"));
     }
 
     @GetMapping(value = "/quote-mono/{id}", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Mono<Quote> getQuote(@PathVariable String id) {
-        return reactiveQuoteService.getQuoteById(id).defaultIfEmpty(new Quote()).log().metrics();
+        return reactiveQuoteService.getQuoteById(id).defaultIfEmpty(new Quote());
     }
 }
