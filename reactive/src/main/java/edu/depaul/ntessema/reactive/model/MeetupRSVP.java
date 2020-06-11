@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Document
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MeetupRSVP {
-    
+
     private MeetupEvent event;
     private MeetupGroup group;
     private Integer guests;
@@ -31,17 +33,38 @@ public class MeetupRSVP {
      */
     public static RSVP toRSVP(MeetupRSVP m) {
         RSVP rsvp = new RSVP();
-        rsvp.setEventName((m.getEvent() != null) ? m.getEvent().getEventName() : "");
-        rsvp.setTime(Instant.ofEpochMilli((m.getEvent() != null) ? m.getEvent().getTime() : 0));
-        rsvp.setGroupName((m.getGroup() != null) ? m.getGroup().getGroupName() : "");
-        rsvp.setGroupCountry((m.getGroup() != null) ? m.getGroup().getGroupCountry() : "");
-        rsvp.setGroupCity((m.getGroup() != null) ? m.getGroup().getGroupCity() : "");
-        rsvp.setTopics(m.getGroup().getGroupTopics().stream().map(MeetupTopic::getTopicName).collect(Collectors.toList()));
-        rsvp.setVenue((m.getVenue() != null) ? m.getVenue().getVenueName() : "");
-        rsvp.setEventUrl((m.getEvent() != null) ? m.getEvent().getEventUrl() : "");
+        String eventName = "";
+        String time = "";
+        String groupName = "";
+        String country = "";
+        String city = "";
+        List<String> topics = new ArrayList<>();
+        String venue = "";
+        String eventUrl = "";
+        if(Objects.nonNull(m.getEvent())) {
+            eventName = m.getEvent().getEventName();
+            time = Instant.ofEpochMilli(m.getEvent().getTime()).toString();
+            eventUrl = m.getEvent().getEventUrl();
+        }
+        if(Objects.nonNull(m.getGroup())) {
+            groupName = m.getGroup().getGroupName();
+            country = m.getGroup().getGroupCountry();
+            city = m.getGroup().getGroupCity();
+            topics = m.getGroup().getGroupTopics().stream().map(MeetupTopic::getTopicName).collect(Collectors.toList());
+        }
+        if(Objects.nonNull(m.getVenue())) {
+            venue = m.getVenue().getVenueName();
+        }
+        rsvp.setEventName(eventName);
+        rsvp.setTime(time);
+        rsvp.setGroupName(groupName);
+        rsvp.setGroupCountry(country);
+        rsvp.setGroupCity(city);
+        rsvp.setTopics(topics);
+        rsvp.setVenue(venue);
+        rsvp.setEventUrl(eventUrl);
         return rsvp;
     }
-
 }
 
 @Data

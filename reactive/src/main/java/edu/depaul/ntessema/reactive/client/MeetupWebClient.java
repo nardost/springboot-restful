@@ -7,10 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Signal;
 
 import java.time.Duration;
-import java.util.Objects;
 
 @Component
 @Slf4j
@@ -27,7 +25,6 @@ public class MeetupWebClient {
                 .accept(MediaType.APPLICATION_STREAM_JSON)
                 .retrieve()
                 .bodyToFlux(MeetupRSVP.class)
-                //.filter(Objects::nonNull)
                 .map(MeetupRSVP::toRSVP)
                 .doOnError(e -> log.info(e.getMessage()))
                 .doOnEach(s -> log.info(s.get().getEventUrl()))
