@@ -11,17 +11,10 @@ import reactor.core.publisher.Signal;
 
 import java.time.Duration;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 @Component
 @Slf4j
 public class MeetupWebClient {
-
-    private Consumer<Signal<RSVP>> consumer = rsvpSignal -> {
-        if(rsvpSignal.hasValue()) {
-            log.info(rsvpSignal.get().getEventUrl());
-        }
-    };
 
     public Flux<RSVP> consumeDataStream() {
 
@@ -34,11 +27,13 @@ public class MeetupWebClient {
                 .accept(MediaType.APPLICATION_STREAM_JSON)
                 .retrieve()
                 .bodyToFlux(MeetupRSVP.class)
-                .filter(Objects::nonNull)
+                //.filter(Objects::nonNull)
                 .map(MeetupRSVP::toRSVP)
                 .doOnError(e -> log.info(e.getMessage()))
-                .doOnEach(consumer)
+                .doOnEach(s -> log.info(s.get().getEventUrl()))
+                .doOnComplete(() -> log.info("Streaming complete."))
+                .doOnCancel(() -> log.info("Streaming cancelled"))
                 .take(20)
-                .take(Duration.ofSeconds(5));
+                .take(Duration.ofSeconds(10));
     }
 }

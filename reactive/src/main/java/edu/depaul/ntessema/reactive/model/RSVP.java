@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.List;
 
 @Document
 @Data
@@ -13,7 +14,7 @@ public class RSVP {
     private String groupName;
     private String groupCountry;
     private String groupCity;
-    private String topics;
+    private List<String> topics;
     private String venue;
     private String eventUrl;
 }

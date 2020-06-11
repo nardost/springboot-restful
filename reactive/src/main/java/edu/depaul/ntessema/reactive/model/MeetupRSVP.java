@@ -3,15 +3,19 @@ package edu.depaul.ntessema.reactive.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Document
 @Data
+@Slf4j
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MeetupRSVP {
+    
     private MeetupEvent event;
     private MeetupGroup group;
     private Integer guests;
@@ -22,16 +26,19 @@ public class MeetupRSVP {
     private MeetupVenue venue;
     private String visibility;
 
-    public static RSVP toRSVP(MeetupRSVP meetupRSVP) {
+    /**
+     * Transform the Meetup object into our RSVP object
+     */
+    public static RSVP toRSVP(MeetupRSVP m) {
         RSVP rsvp = new RSVP();
-        rsvp.setEventName((meetupRSVP.getEvent() != null) ? meetupRSVP.getEvent().getEventName() : "");
-        rsvp.setTime(Instant.ofEpochMilli((meetupRSVP.getEvent() != null) ? meetupRSVP.getEvent().getTime() : 0));
-        rsvp.setGroupName((meetupRSVP.getGroup() != null) ? meetupRSVP.getGroup().getGroupName() : "");
-        rsvp.setGroupCountry((meetupRSVP.getGroup() != null) ? meetupRSVP.getGroup().getGroupCountry() : "");
-        rsvp.setGroupCity((meetupRSVP.getGroup() != null) ? meetupRSVP.getGroup().getGroupCity() : "");
-        rsvp.setTopics("");
-        rsvp.setVenue((meetupRSVP.getVenue() != null) ? meetupRSVP.getVenue().getVenueName() : "");
-        rsvp.setEventUrl((meetupRSVP.getEvent() != null) ? meetupRSVP.getEvent().getEventUrl() : "");
+        rsvp.setEventName((m.getEvent() != null) ? m.getEvent().getEventName() : "");
+        rsvp.setTime(Instant.ofEpochMilli((m.getEvent() != null) ? m.getEvent().getTime() : 0));
+        rsvp.setGroupName((m.getGroup() != null) ? m.getGroup().getGroupName() : "");
+        rsvp.setGroupCountry((m.getGroup() != null) ? m.getGroup().getGroupCountry() : "");
+        rsvp.setGroupCity((m.getGroup() != null) ? m.getGroup().getGroupCity() : "");
+        rsvp.setTopics(m.getGroup().getGroupTopics().stream().map(MeetupTopic::getTopicName).collect(Collectors.toList()));
+        rsvp.setVenue((m.getVenue() != null) ? m.getVenue().getVenueName() : "");
+        rsvp.setEventUrl((m.getEvent() != null) ? m.getEvent().getEventUrl() : "");
         return rsvp;
     }
 
