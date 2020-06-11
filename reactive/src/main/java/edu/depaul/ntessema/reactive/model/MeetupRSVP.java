@@ -50,7 +50,11 @@ public class MeetupRSVP {
             groupName = m.getGroup().getGroupName();
             country = m.getGroup().getGroupCountry();
             city = m.getGroup().getGroupCity();
-            topics = m.getGroup().getGroupTopics().stream().map(MeetupTopic::getTopicName).collect(Collectors.toList());
+            topics = m.getGroup()
+                    .getGroupTopics()
+                    .stream()
+                    .map(MeetupTopic::getTopicName)
+                    .collect(Collectors.toList());
         }
         if(Objects.nonNull(m.getVenue())) {
             venue = m.getVenue().getVenueName();
