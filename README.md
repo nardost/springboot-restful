@@ -18,7 +18,7 @@ $ javat -jar caching/target/caching-1.0-SNAPSHOT.jar
 
 The service runs at ```http://localhost:8080```
 
-# Endpoints
+## Endpoints
 
 ```/quotes```
 
@@ -32,7 +32,7 @@ $ java -jar hateoas/target/hateoas-1.0-SNAPSHOT.jar
 
 The service runs at ```http://localhost:8081```
 
-# Endpoints
+## Endpoints
 
 ```
 /hateoas-quotes
@@ -40,3 +40,21 @@ The service runs at ```http://localhost:8081```
 /hateoas-sages
 /hateoas-sage/{name}
 ```
+# Reactive Web Service
+
+Run the service as follows:
+
+```
+$ java -jar hateoas/target/reactive-1.0-SNAPSHOT.jar
+```
+
+The service runs at ```http://localhost:8082```
+
+## Endpoints
+
+```
+/quote-flux
+/quote-mono/{id}
+/rsvp-flux
+```
+
