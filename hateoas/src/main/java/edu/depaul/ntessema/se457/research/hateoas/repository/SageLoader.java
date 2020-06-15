@@ -27,6 +27,10 @@ public class SageLoader {
             sage.setName(s[0]);
             sage.setLanguage(s[1]);
             sage.setSaidOn(s[3]);
+            /*
+             * It is currently throwing some exception with the
+             * embedded mongo db. So the next line is commented out.
+             */
             //repository.save(sage);
         });
     }

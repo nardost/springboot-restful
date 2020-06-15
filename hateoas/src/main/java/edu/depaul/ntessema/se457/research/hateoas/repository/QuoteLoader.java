@@ -36,6 +36,10 @@ public class QuoteLoader {
             Quote quote = new Quote();
             quote.setQuote(q[0]);
             quote.setBy(q[1]);
+            /*
+             * It is currently throwing some exception with the
+             * embedded mongo db. So the next line is commented out.
+             */
             //repository.save(quote);
         });
     }
